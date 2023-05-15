@@ -151,7 +151,8 @@ def load_data(
         LABEL,
         PATH_TO_MODEL,
         POSITIVE_FINDINGS_ONLY,
-        STARTER_IMAGES):
+        STARTER_IMAGES,
+        cfg):
     """
     Loads dataloader and torchvision model
 
@@ -204,12 +205,19 @@ def load_data(
     else:
         finding = LABEL
 
-    dataset = CXR.CXRDataset(
-        path_to_images=PATH_TO_IMAGES,
-        fold='test',
-        transform=data_transform,
-        finding=finding,
-        starter_images=STARTER_IMAGES)
+    if 'chexphoto' in cfg.name: #load chexphoto
+        dataset = CXR.CPDataset(
+            path_to_images=cfg.dataset_path,
+            path_to_csv=cfg.csv_path,
+            fold='val',
+            transform=data_transform)
+    else:
+        dataset = CXR.CXRDataset(
+            path_to_images=PATH_TO_IMAGES,
+            fold='test',
+            transform=data_transform,
+            finding=finding,
+            starter_images=STARTER_IMAGES)
     
     dataloader = torch.utils.data.DataLoader(
         dataset, batch_size=1, shuffle=False, num_workers=1)
@@ -217,7 +225,7 @@ def load_data(
     return iter(dataloader), model
 
 
-def show_next(dataloader, model, LABEL):
+def show_next(dataloader, model, LABEL, cfg):
     """
     Plots CXR, activation map of CXR, and shows model probabilities of findings
 
@@ -228,21 +236,38 @@ def show_next(dataloader, model, LABEL):
     Returns:
         None (plots output)
     """
-    FINDINGS = [
-        'Atelectasis',
-        'Cardiomegaly',
-        'Effusion',
-        'Infiltration',
-        'Mass',
-        'Nodule',
-        'Pneumonia',
-        'Pneumothorax',
-        'Consolidation',
-        'Edema',
-        'Emphysema',
-        'Fibrosis',
-        'Pleural_Thickening',
-        'Hernia']
+    if 'chexphoto' in cfg.name: #load chexphoto
+        FINDINGS =[
+            'Enlarged Cardiomediastinum',
+            'Cardiomegaly',
+            'Lung Opacity',
+            'Lung Lesion',
+            'Edema',
+            'Consolidation',
+            'Pneumonia',
+            'Atelectasis',
+            'Pneumothorax',
+            'Pleural Effusion',
+            'Pleural Other',
+            'Fracture',
+            'Support Devices']
+    else:
+        FINDINGS = [
+            'Atelectasis',
+            'Cardiomegaly',
+            'Effusion',
+            'Infiltration',
+            'Mass',
+            'Nodule',
+            'Pneumonia',
+            'Pneumothorax',
+            'Consolidation',
+            'Edema',
+            'Emphysema',
+            'Fibrosis',
+            'Pleural_Thickening',
+            'Hernia']
+
     
     label_index = next(
         (x for x in range(len(FINDINGS)) if FINDINGS[x] == LABEL))
@@ -287,7 +312,12 @@ def show_next(dataloader, model, LABEL):
     showcxr.imshow(cxr)
     showcxr.axis('off')
     showcxr.set_title(filename[0])
-    plt.savefig(str(LABEL+"_P"+str(predx[label_index])+"_file_"+filename[0]))
+
+    if 'chexphoto' in cfg.name:#cause problem -> no filename
+        pass
+    else:
+        plt.savefig(str(LABEL+"_P"+str(predx[label_index])+"_file_"+filename[0]))
+
     plt.show()
     
     

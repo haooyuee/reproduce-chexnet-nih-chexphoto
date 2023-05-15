@@ -35,17 +35,34 @@ def make_pred_multilabel(data_transforms, model, cfg):
     model.train(False)
 
     # create dataloader
-    dataset = CXR.CXRDataset(
+    if 'chexphoto' in cfg.name: #load chexphoto
+        dataset = CXR.CPDataset(
         path_to_images=cfg.dataset_path,
-        fold="test",
+        path_to_csv=cfg.csv_path,
+        fold='val',
         transform=data_transforms['val'])
-    dataloader = torch.utils.data.DataLoader(
-        dataset, BATCH_SIZE, shuffle=False, num_workers=2)
-    size = len(dataset)
-
-    # create empty dfs
-    pred_df = pd.DataFrame(columns=["Image Index"])
-    true_df = pd.DataFrame(columns=["Image Index"])
+         
+        dataloader = torch.utils.data.DataLoader(
+            dataset, BATCH_SIZE, shuffle=False, num_workers=2)
+        size = len(dataset)
+    
+        # create empty dfs
+        pred_df = pd.DataFrame(columns=["Path"])
+        true_df = pd.DataFrame(columns=["Path"])
+    
+    else: ##OR load NIH
+        dataset = CXR.CXRDataset(
+            path_to_images=cfg.dataset_path,
+            fold="test",
+            transform=data_transforms['val'])
+        
+        dataloader = torch.utils.data.DataLoader(
+            dataset, BATCH_SIZE, shuffle=False, num_workers=2)
+        size = len(dataset)
+    
+        # create empty dfs
+        pred_df = pd.DataFrame(columns=["Image Index"])
+        true_df = pd.DataFrame(columns=["Image Index"])
 
     # iterate over dataloader
     t = tqdm(dataloader)
@@ -83,23 +100,39 @@ def make_pred_multilabel(data_transforms, model, cfg):
 
     # calc AUCs
     for column in true_df:
-
-        if column not in [
-            'Atelectasis',
-            'Cardiomegaly',
-            'Effusion',
-            'Infiltration',
-            'Mass',
-            'Nodule',
-            'Pneumonia',
-            'Pneumothorax',
-            'Consolidation',
-            'Edema',
-            'Emphysema',
-            'Fibrosis',
-            'Pleural_Thickening',
-                'Hernia']:
+        if 'chexphoto' in cfg.name:
+            if column not in [
+                'Enlarged Cardiomediastinum',
+                'Cardiomegaly',
+                'Lung Opacity',
+                'Lung Lesion',
+                'Edema',
+                'Consolidation',
+                'Pneumonia',
+                'Atelectasis',
+                'Pneumothorax',
+                'Pleural Effusion',
+                'Pleural Other',
+                'Fracture',
+                'Support Devices']:
                     continue
+        else:
+            if column not in [
+                'Atelectasis',
+                'Cardiomegaly',
+                'Effusion',
+                'Infiltration',
+                'Mass',
+                'Nodule',
+                'Pneumonia',
+                'Pneumothorax',
+                'Consolidation',
+                'Edema',
+                'Emphysema',
+                'Fibrosis',
+                'Pleural_Thickening',
+                'Hernia']:
+                        continue
         actual = true_df[column]
         pred = pred_df["prob_" + column]
         thisrow = {}
@@ -112,8 +145,11 @@ def make_pred_multilabel(data_transforms, model, cfg):
                 actual.astype(int), pred)    
         except BaseException:
             print("can't calculate auc for " + str(column))
+            
+        '''   
         thisrow['auc'] = sklm.roc_auc_score(
                 actual.astype(int), pred)    
+        '''
         auc_df = auc_df.append(thisrow, ignore_index=True)
 
     pred_df.to_csv(f"results/{cfg.name}_preds.csv", index=False)

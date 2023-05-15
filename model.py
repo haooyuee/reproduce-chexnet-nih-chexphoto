@@ -222,8 +222,10 @@ def train_cnn(cfg):
     # use imagenet mean,std for normalization
     mean = [0.485, 0.456, 0.406]
     std = [0.229, 0.224, 0.225]
-
-    N_LABELS = 14  # we are predicting 14 labels
+    if 'chexphoto' in cfg.name:
+        N_LABELS = 13  # we are predicting 14 labels for nih but 13 for chexphoto
+    else:
+        N_LABELS = 14
 
     # load labels
     df = pd.read_csv("nih_labels.csv", index_col=0)
@@ -249,14 +251,29 @@ def train_cnn(cfg):
 
     # create train/val dataloaders
     transformed_datasets = {}
-    transformed_datasets['train'] = CXR.CXRDataset(
+    if 'chexphoto' in cfg.name: #load chexphoto
+        transformed_datasets['train'] = CXR.CPDataset(
         path_to_images=cfg.dataset_path,
+        path_to_csv=cfg.csv_path,
         fold='train',
         transform=data_transforms['train'])
-    transformed_datasets['val'] = CXR.CXRDataset(
+
+        transformed_datasets['val'] = CXR.CPDataset(
         path_to_images=cfg.dataset_path,
+        path_to_csv=cfg.csv_path,
         fold='val',
         transform=data_transforms['val'])
+    else: #OR load NIH
+        transformed_datasets['train'] = CXR.CXRDataset(
+            path_to_images=cfg.dataset_path,
+            fold='train',
+            transform=data_transforms['train'])
+        transformed_datasets['val'] = CXR.CXRDataset(
+            path_to_images=cfg.dataset_path,
+            fold='val',
+            transform=data_transforms['val'])
+        
+    
 
     dataloaders = {}
     dataloaders['train'] = torch.utils.data.DataLoader(
