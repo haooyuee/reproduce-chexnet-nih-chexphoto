@@ -1,3 +1,23 @@
+# task list：
+- Étape #1 : Charger le code de GitHub
+
+- Étape #2 : Vous devez disposer d’un 
+
+- GPU Étape #3 : charger le training dataset initale: https://www.kaggle.com/datasets/nih-chest-xrays/data
+
+- Étape #4 : Lire le Readme et les documentations
+
+- Étape #5 : Relancer le training et la validation
+
+- Étape #5 : Vérifier la convergence
+
+- Étape #6: Try to load the ChexPhoto Dataset : https://stanfordmlgroup.github.io/competitions/chexphoto/
+
+- Étape #7 : Try to relaunch the training with the ChexPhoto dataset
+
+- Étape #8 : Vérifier la convergence et comparer les métriques convergences
+
+# Here is the original readme
 # reproduce-chexnet
 [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/jrzech/reproduce-chexnet/master?filepath=Explore_Predictions.ipynb)
 
