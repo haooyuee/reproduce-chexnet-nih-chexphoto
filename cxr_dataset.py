@@ -10,7 +10,6 @@ class CXRDataset(Dataset):
     def __init__(
             self,
             path_to_images,
-            path_to_csv,
             fold,
             transform=None,
             sample=0,
