@@ -1,21 +1,30 @@
 # task list：
 - Étape #1 : Charger le code de GitHub
+
 Done
 - Étape #2 : Vous devez disposer d’un GPU 
+
 3060m and Google Colab
 - Étape #3 : charger le training dataset initale: https://www.kaggle.com/datasets/nih-chest-xrays/data
+
 Charger the nih resized dataset : [nih resized 224*224](https://academictorrents.com/details/e615d3aebce373f1dc8bd9d11064da55bdadede0)
 - Étape #4 : Lire le Readme et les documentations
+
 Done
 - Étape #5 : Relancer le training et la validation
+
 Retrain_colab.ipynb (Use the computing resources of colab to train)
 - Étape #5 : Vérifier la convergence
+
 plot.ipynb
 - Étape #6: Try to load the ChexPhoto Dataset : https://stanfordmlgroup.github.io/competitions/chexphoto/
+
 Done (The resized dataset cannot be found, so use the validation set and the test set  as the training set validation set. Thus saving computing resources.)
 - Étape #7 : Try to relaunch the training with the ChexPhoto dataset
+
 Retrain_chexphoto.ipynb
 - Étape #8 : Vérifier la convergence et comparer les métriques convergences
+
 plot.ipynb
 
 # Answer some questions
