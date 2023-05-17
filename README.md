@@ -1,21 +1,50 @@
 # task list：
 - Étape #1 : Charger le code de GitHub
-
-- Étape #2 : Vous devez disposer d’un 
-
-- GPU Étape #3 : charger le training dataset initale: https://www.kaggle.com/datasets/nih-chest-xrays/data
-
+Done
+- Étape #2 : Vous devez disposer d’un GPU 
+3060m and Google Colab
+- Étape #3 : charger le training dataset initale: https://www.kaggle.com/datasets/nih-chest-xrays/data
+Charger the nih resized dataset : [nih resized 224*224](https://academictorrents.com/details/e615d3aebce373f1dc8bd9d11064da55bdadede0)
 - Étape #4 : Lire le Readme et les documentations
-
+Done
 - Étape #5 : Relancer le training et la validation
-
+Retrain_colab.ipynb (Use the computing resources of colab to train)
 - Étape #5 : Vérifier la convergence
-
+plot.ipynb
 - Étape #6: Try to load the ChexPhoto Dataset : https://stanfordmlgroup.github.io/competitions/chexphoto/
-
+Done (The resized dataset cannot be found, so use the validation set and the test set  as the training set validation set. Thus saving computing resources.)
 - Étape #7 : Try to relaunch the training with the ChexPhoto dataset
-
+Retrain_chexphoto.ipynb
 - Étape #8 : Vérifier la convergence et comparer les métriques convergences
+plot.ipynb
+
+# Answer some questions
+- Comprendre où se trouve le data loader, le loss calculator, l'optimizer, Quel est l'algo de loss ?
+Generally in pytorch, we first create a Dataset, then use torch.DATALOADER to load the dataset. (in model.py (line 279))
+
+Loss function: Binary Cross Entropy and is used for binary classification, which is a very common choice in multi-task classification. We need to calculate the BCEloss of each label separately and then combine them to obtain the total Loss.
+
+Optimizer: Stochastic gradient descent which is a Basic optimizer, maybe we can try SGD with momentum OR Adam to get better performance.
+
+- Quelles sont les métrics ?
+We use the Area Under the Curve (AUC) as the primary evaluation metric for our classification models. In an imbalanced dataset(like medic image), some classes have significantly fewer samples than others, which can lead to biased model performance and misleading evaluation metrics.
+
+Traditional evaluation metrics such as accuracy may not provide an accurate representation of the model's performance in such cases, as a high accuracy can be achieved by merely predicting the majority class. Similarly, the F1-score, which combines precision and recall, can also be affected by the imbalance, resulting in many zero values when the model fails to predict minority classes correctly.
+
+The AUC metric, on the other hand, provides a more reliable measure of the model's performance, as it considers both true positive rate (sensitivity) and false positive rate (1-specificity) across various decision thresholds. By using the AUC metric, we can better understand the trade-offs between sensitivity and specificity, making it a more suitable evaluation metric for our imbalanced dataset. This choice allows us to effectively compare and assess the performance of different models and techniques employed in our project.
+
+- Y-a-t-il un scheduler ?
+Yes, in the code there a Learning rate reduction and early stopping.
+
+Learning rate reduction: decay learning rate if no val loss improvement in this epoch (Patience = 1 epoch)
+
+Early stopping : break if no val loss improvement in 3 epochs (Patience = 3 epoch)
+
+Maybe we can increase the patience value to get better performance, because training a model have randomness.
+
+- Charger le dataset, le vérifier (ouvrir quelques images) Faire un histogram par class (avec Excel ou Libre office) pour validation et training.
+Explore_chexphotodataset.ipynb and Explore_nihdataset.ipynb
+
 
 # Here is the original readme
 # reproduce-chexnet
