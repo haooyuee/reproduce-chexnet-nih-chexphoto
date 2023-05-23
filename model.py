@@ -314,6 +314,7 @@ def train_cnn(cfg):
     # train model
     model, best_epoch = train_model(model, criterion, optimizer, cfg.lr, num_epochs=NUM_EPOCHS,
                                     dataloaders=dataloaders, dataset_sizes=dataset_sizes, weight_decay=cfg.weight_decay, cfg=cfg)
+    threshold = {}
 
     # get preds and AUCs on test fold
     preds, aucs = E.make_pred_multilabel(
