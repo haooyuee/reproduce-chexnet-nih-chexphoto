@@ -69,13 +69,13 @@ class Metrics:
         for idx, thresh in enumerate(self.thresholds):
             pred2[:, idx] = np.where(pred2[:, idx] > thresh, 1, 0)
          
-        accuracy = 0
-        for x, y in zip(self.true, pred2):
-            if (x == y).all():
-                accuracy += 1
+        #accuracy = 0
+        #for x, y in zip(self.true, pred2):
+        #    if (x == y).all():
+        #        accuracy += 1
            
-
-        return accuracy
+        return accuracy_score(self.true, pred2)
+        #return accuracy/pred2.shape[0]
 
     ###################################################################
     def f1(self):

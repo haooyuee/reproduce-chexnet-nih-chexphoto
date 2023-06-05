@@ -85,7 +85,7 @@
         "Pneumothorax": 0.4680365296803653,
         "globale": 0.47131949932806627
     },
-    "accuracy": 11828,
+    "accuracy": 0.5272589488699684,
     "gmean": {
         "Atelectasis": 0.39830377066591,
         "Cardiomegaly": 0.4335698076216097,

@@ -291,6 +291,7 @@ def train_cnn(cfg):
     if not use_gpu:
         raise ValueError("Error, requires GPU")
     model = models.densenet121(weights='DEFAULT')
+ 
     num_ftrs = model.classifier.in_features
     # add final layer with # outputs in same dimension of labels with sigmoid
     # activation
